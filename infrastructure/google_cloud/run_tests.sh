@@ -21,7 +21,7 @@ DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 TAG=${1}
 BRANCH=${2:-develop}
 OUTPUT=${3:-output-${DATE}-${TAG}}
-BENCHMARK_BRANCH=${4:-develop}
+BENCHMARK_BRANCH=${4:-benchmark-playground}
 PREFIX="geode-performance-${TAG}"
 
 INSTANCES=$(gcloud compute instance-groups list-instances ${PREFIX} | grep "${TAG}" | awk '{print $1}')
@@ -34,7 +34,7 @@ FIRST_INSTANCE=$(echo ${INSTANCES} | awk '{print $1}' )
 gcloud compute ssh geode@$FIRST_INSTANCE --command="\
   rm -rf geode-benchmarks geode && \
   git clone --depth=1 https://github.com/apache/geode --branch ${BRANCH} geode && \
-  git clone https://github.com/apache/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
+  git clone https://github.com/smgoller/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
   cd geode-benchmarks && \
   ./gradlew --include-build ../geode benchmark -Phosts=${HOSTS}"
 

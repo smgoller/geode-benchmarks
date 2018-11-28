@@ -21,7 +21,7 @@ DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 TAG=${1}
 BRANCH=${2:-develop}
 BASELINE=${3:-"rel/v1.7.0"}
-BENCHMARK_BRANCH=${4:-develop}
+BENCHMARK_BRANCH=${4:-benchmark-playground}
 OUTPUT=output-${DATE}-${TAG}
 
 ./run_tests.sh ${TAG} ${BRANCH} ${OUTPUT}/branch ${BENCHMARK_BRANCH}

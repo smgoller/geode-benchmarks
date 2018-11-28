@@ -28,7 +28,7 @@ import org.apache.geode.cache.Region;
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
 
-public class PutBigValueTask extends BenchmarkDriverAdapter implements Serializable {
+public class PutBigValueRandomKeyTask extends BenchmarkDriverAdapter implements Serializable {
 
   private Region<Object, Object> region;
 
@@ -41,9 +41,10 @@ public class PutBigValueTask extends BenchmarkDriverAdapter implements Serializa
 
   @Override
   public boolean test(Map<Object, Object> ctx) throws Exception {
-    final int length=257;
+    final int length=20;
+    String key = RandomStringUtils.random(length,true,false);
     String value = RandomStringUtils.random(length,true,false);
-    region.put(1, value);
+    region.put(key, value);
     return true;
   }
 }

@@ -19,14 +19,14 @@ package org.apache.geode.benchmark.tests;
 
 import org.junit.Test;
 
-import org.apache.geode.benchmark.tasks.PutBigValueRandomKeyTask;
+import org.apache.geode.benchmark.tasks.PutBigValueTask;
 import org.apache.geode.benchmark.tasks.StartClient;
 import org.apache.geode.benchmark.tasks.StartLocator;
 import org.apache.geode.benchmark.tasks.StartServer;
 import org.apache.geode.perftest.TestConfig;
 import org.apache.geode.perftest.TestRunners;
 
-public class BigValuePutBenchmark {
+public class BigValueRandomKeyPutBenchmark {
 
   @Test
   public void run() throws Exception {
@@ -37,7 +37,7 @@ public class BigValuePutBenchmark {
 
     int locatorPort = 10334;
 
-    config.name(BigValuePutBenchmark.class.getCanonicalName());
+    config.name(BigValueRandomKeyPutBenchmark.class.getCanonicalName());
     config.warmupSeconds(2);
     config.durationSeconds(5);
     config.role("locator", 1);
@@ -46,6 +46,6 @@ public class BigValuePutBenchmark {
     config.before(new StartLocator(locatorPort), "locator");
     config.before(new StartServer(locatorPort), "server");
     config.before(new StartClient(locatorPort), "client");
-    config.workload(new PutBigValueRandomKeyTask(),"client");
+    config.workload(new PutBigValueTask(),"client");
   }
 }

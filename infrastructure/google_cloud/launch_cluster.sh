@@ -24,7 +24,7 @@ COUNT=${2}
 SUBNET=${3}
 IMAGE_FAMILY="geode-performance"
 PREFIX="geode-performance-${TAG}"
-INSTANCE_TYPE=n1-standard-16
+INSTANCE_TYPE=${4:-"n1-standard-16"}
 
 KEY_FILE=/tmp/id_${TAG}
 

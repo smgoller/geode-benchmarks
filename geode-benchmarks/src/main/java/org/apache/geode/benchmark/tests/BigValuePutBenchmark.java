@@ -39,7 +39,7 @@ public class BigValuePutBenchmark {
 
     config.name(BigValuePutBenchmark.class.getCanonicalName());
     config.warmupSeconds(2);
-    config.durationSeconds(5);
+    config.durationSeconds(300);
     config.role("locator", 1);
     config.role("server", 1);
     config.role("client", 1);

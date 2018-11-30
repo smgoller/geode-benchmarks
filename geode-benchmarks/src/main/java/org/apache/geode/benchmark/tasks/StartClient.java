@@ -1,12 +1,12 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,16 +17,20 @@
 
 package org.apache.geode.benchmark.tasks;
 
+import static org.apache.geode.benchmark.configurations.BenchmarkParameters.CLIENT_CACHE;
+
 import java.io.File;
 import java.net.InetAddress;
 
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
-import org.apache.geode.cache.client.ClientRegionShortcut;
 import org.apache.geode.distributed.ConfigurationProperties;
 import org.apache.geode.perftest.Task;
 import org.apache.geode.perftest.TestContext;
 
+/**
+ * Task to create the client cache
+ */
 public class StartClient implements Task {
   private int locatorPort;
 
@@ -43,11 +47,10 @@ public class StartClient implements Task {
 
     ClientCache clientCache = new ClientCacheFactory()
         .addPoolLocator(locator.getHostAddress(), locatorPort)
-        .set(ConfigurationProperties.STATISTIC_SAMPLING_ENABLED,"true")
+        .set(ConfigurationProperties.STATISTIC_SAMPLING_ENABLED, "true")
         .set(ConfigurationProperties.STATISTIC_ARCHIVE_FILE, statsFile)
         .create();
 
-    clientCache.createClientRegionFactory(ClientRegionShortcut.PROXY)
-        .create("region");
+    context.setAttribute(CLIENT_CACHE, clientCache);
   }
 }

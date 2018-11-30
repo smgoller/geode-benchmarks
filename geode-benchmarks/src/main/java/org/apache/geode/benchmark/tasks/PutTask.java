@@ -1,12 +1,12 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,19 +19,25 @@ package org.apache.geode.benchmark.tasks;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.yardstickframework.BenchmarkConfiguration;
 import org.yardstickframework.BenchmarkDriverAdapter;
 
+import org.apache.geode.benchmark.data.PortfolioPdx;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
-import org.apache.geode.perftest.Task;
-import org.apache.geode.perftest.TestContext;
 
 public class PutTask extends BenchmarkDriverAdapter implements Serializable {
 
   private Region<Object, Object> region;
+
+  private long keyRange;
+
+  public PutTask(long keyRange) {
+    this.keyRange = keyRange;
+  }
 
   @Override
   public void setUp(BenchmarkConfiguration cfg) throws Exception {
@@ -42,7 +48,8 @@ public class PutTask extends BenchmarkDriverAdapter implements Serializable {
 
   @Override
   public boolean test(Map<Object, Object> ctx) throws Exception {
-    region.put(1,2);
+    long key = ThreadLocalRandom.current().nextLong(0, this.keyRange);
+    region.put(key, new PortfolioPdx(key));
     return true;
   }
 }

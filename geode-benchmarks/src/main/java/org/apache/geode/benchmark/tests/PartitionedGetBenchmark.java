@@ -1,12 +1,12 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,41 +17,24 @@
 
 package org.apache.geode.benchmark.tests;
 
-import org.junit.Test;
+import static org.apache.geode.benchmark.configurations.BenchmarkParameters.Roles.SERVER;
 
-import org.apache.geode.benchmark.tasks.GetTask;
-import org.apache.geode.benchmark.tasks.StartClient;
-import org.apache.geode.benchmark.tasks.StartLocator;
-import org.apache.geode.benchmark.tasks.StartServer;
+import org.apache.geode.benchmark.tasks.CreatePartitionedRegion;
 import org.apache.geode.perftest.TestConfig;
-import org.apache.geode.perftest.TestRunners;
 
 /**
  * Benchmark of gets on a partitioned region.
- *
- * TODO - this is not populating the region!
- * TODO - this is only getting a single key!
  */
-public class PartitionedGetBenchmark {
+public class PartitionedGetBenchmark extends GetBenchmark {
 
-  @Test
-  public void run() throws Exception {
-    TestRunners.defaultRunner().runTest(this::configure);
+  public PartitionedGetBenchmark() {}
+
+  PartitionedGetBenchmark(long keyRange) {
+    this.keyRange = keyRange;
   }
 
-  public void configure(TestConfig config) {
-
-    int locatorPort = 10334;
-
-    config.name(PartitionedGetBenchmark.class.getCanonicalName());
-    config.warmupSeconds(2);
-    config.durationSeconds(300);
-    config.role("locator", 1);
-    config.role("server", 1);
-    config.role("client", 1);
-    config.before(new StartLocator(locatorPort), "locator");
-    config.before(new StartServer(locatorPort), "server");
-    config.before(new StartClient(locatorPort), "client");
-    config.workload(new GetTask(),"client");
+  @Override
+  void createRegion(TestConfig config) {
+    config.before(new CreatePartitionedRegion(), SERVER);
   }
 }

@@ -1,12 +1,12 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -73,16 +73,30 @@ public class TestRunnerIntegrationTest {
     File expectedBenchmarkDir = new File(outputDir, SAMPLE_BENCHMARK);
     assertTrue(expectedBenchmarkDir.exists());
 
-    //Node directory name is the role + a number
+    // Node directory name is the role + a number
     File expectedNodeDir = new File(expectedBenchmarkDir, "all-0");
     assertTrue(expectedNodeDir.exists());
 
-    //We expect the node directory to have benchmark results
-    Stream<Path>
-        outputFiles = Files.walk(expectedNodeDir.toPath())
+    // We expect the node directory to have benchmark results
+    Stream<Path> outputFiles = Files.walk(expectedNodeDir.toPath())
         .filter(nameMatches(YardstickThroughputSensorParser.sensorOutputFile));
 
     assertEquals(1, outputFiles.count());
+  }
+
+  @Test
+  public void configuresJVMOptions() throws Exception {
+    runner.runTest(testConfig -> {
+      testConfig.name(SAMPLE_BENCHMARK);
+      testConfig.role("all", 1);
+      testConfig.jvmArgs("all", "-Dprop1=true", "-Dprop2=5");
+      testConfig.before(context -> {
+        assertTrue("Expecting system property to be set in launched JVM, but it was not present.",
+            Boolean.getBoolean("prop1"));
+        assertEquals("Expecting system property to be set in launched JVM, but it was not present.",
+            5, Integer.getInteger("prop2").intValue());
+      }, "all");
+    });
   }
 
   private Predicate<Path> nameMatches(String sensorOutputFile) {

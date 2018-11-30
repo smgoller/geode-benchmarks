@@ -1,12 +1,12 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,6 @@ import org.apache.geode.perftest.PerformanceTest;
 import org.apache.geode.perftest.TestConfig;
 import org.apache.geode.perftest.TestRunner;
 import org.apache.geode.perftest.infrastructure.InfrastructureFactory;
-import org.apache.geode.perftest.infrastructure.Infrastructure;
 import org.apache.geode.perftest.jvms.RemoteJVMFactory;
 import org.apache.geode.perftest.jvms.RemoteJVMs;
 
@@ -63,20 +62,22 @@ public class DefaultTestRunner implements TestRunner {
       throws Exception {
     int nodes = config.getTotalJVMs();
 
-    if(config.getName() == null) {
+    if (config.getName() == null) {
       throw new IllegalStateException("Benchmark must have a name.");
     }
     File benchmarkOutput = new File(outputDir, config.getName());
-    if(benchmarkOutput.exists()) {
-      throw new IllegalStateException("Benchmark output directory already exists: " + benchmarkOutput.getPath());
+    if (benchmarkOutput.exists()) {
+      throw new IllegalStateException(
+          "Benchmark output directory already exists: " + benchmarkOutput.getPath());
     }
 
 
     Map<String, Integer> roles = config.getRoles();
+    Map<String, List<String>> jvmArgs = config.getJvmArgs();
 
     logger.info("Lauching JVMs...");
-    //launch JVMs in parallel, hook them up
-    try (RemoteJVMs remoteJVMs = remoteJvmFactory.launch(roles)) {
+    // launch JVMs in parallel, hook them up
+    try (RemoteJVMs remoteJVMs = remoteJvmFactory.launch(roles, jvmArgs)) {
 
       logger.info("Starting before tasks...");
       runTasks(config.getBefore(), remoteJVMs);
@@ -94,7 +95,7 @@ public class DefaultTestRunner implements TestRunner {
   }
 
   private void runTasks(List<TestConfig.TestStep> steps,
-                        RemoteJVMs remoteJVMs) {
+      RemoteJVMs remoteJVMs) {
     steps.forEach(testStep -> {
       remoteJVMs.execute(testStep.getTask(), testStep.getRoles());
     });

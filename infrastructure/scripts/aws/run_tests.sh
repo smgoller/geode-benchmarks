@@ -36,7 +36,7 @@ echo "HOSTS=${HOSTS}"
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
   rm -rf geode-benchmarks geode && \
   git clone https://github.com/smgoller/geode geode && \
-  git checkout ${BRANCH} && \
+  (pushd geode; git checkout ${BRANCH}) && \
   git clone https://github.com/smgoller/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
   cd geode-benchmarks && \
   ./gradlew --include-build ../geode benchmark -Phosts=${HOSTS}"

@@ -21,10 +21,10 @@ DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 TAG=${1}
 BRANCH=${2:-develop}
 OUTPUT=${3:-output-${DATE}-${TAG}}
-BENCHMARK_BRANCH=${4:-develop}
+BENCHMARK_BRANCH=${4:-aws}
 PREFIX="geode-performance-${TAG}"
 
-SSH_OPTIONS="-i ~/.ssh/geode-benchmarks/${TAG}.pem"
+SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/geode-benchmarks/${TAG}.pem"
 HOSTS=`aws ec2 describe-instances --query 'Reservations[*].Instances[*].PrivateIpAddress' --filter "Name=tag:geode-benchmarks,Values=${TAG}" --output text`
 HOSTS=$(echo ${HOSTS} | tr ' ' ',')
 FIRST_INSTANCE=`aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filter "Name=tag:geode-benchmarks,Values=${TAG}" --output text | cut -f 1`
@@ -34,8 +34,9 @@ echo "HOSTS=${HOSTS}"
 
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
   rm -rf geode-benchmarks geode && \
-  git clone --depth=1 https://github.com/apache/geode --branch ${BRANCH} geode && \
-  git clone https://github.com/apache/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
+  git clone https://github.com/smgoller/geode geode && \
+  git checkout ${BRANCH} && \
+  git clone https://github.com/smgoller/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
   cd geode-benchmarks && \
   ./gradlew --include-build ../geode benchmark -Phosts=${HOSTS}"
 

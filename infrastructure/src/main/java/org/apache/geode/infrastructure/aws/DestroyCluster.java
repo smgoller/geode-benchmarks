@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.DeleteKeyPairRequest;
+import software.amazon.awssdk.services.ec2.model.DeleteKeyPairResponse;
 import software.amazon.awssdk.services.ec2.model.DeleteLaunchTemplateRequest;
 import software.amazon.awssdk.services.ec2.model.DeletePlacementGroupRequest;
 import software.amazon.awssdk.services.ec2.model.DeleteSecurityGroupRequest;
@@ -59,11 +60,12 @@ public class DestroyCluster {
 
   private static void deleteKeyPair(String benchmarkTag) {
     try {
-      ec2.deleteKeyPair(
+      System.out.println("Deleting cluster keypair: " + AwsBenchmarkMetadata.keyPair(benchmarkTag));
+      DeleteKeyPairResponse dkpr = ec2.deleteKeyPair(
           DeleteKeyPairRequest.builder().keyName(AwsBenchmarkMetadata.keyPair(benchmarkTag))
               .build());
       Files.deleteIfExists(Paths.get(AwsBenchmarkMetadata.keyPairFileName(benchmarkTag)));
-      System.out.println("Key Pair for cluster'" + benchmarkTag + "' deleted.");
+      System.out.println("Key Pair for cluster '" + benchmarkTag + "' deleted.");
     } catch (Exception e) {
       System.out.println("We got an exception while deleting the Key pair");
       System.out.println("Exception message: " + e);

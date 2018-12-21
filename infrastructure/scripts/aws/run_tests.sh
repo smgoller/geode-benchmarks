@@ -21,7 +21,7 @@ DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 
 TAG=${1}
 BRANCH=${2:-develop}
-BENCHMARK_BRANCH=${3:-aws}
+BENCHMARK_BRANCH=${3:-develop}
 OUTPUT=${4:-output-${DATE}-${TAG}}
 PREFIX="geode-performance-${TAG}"
 

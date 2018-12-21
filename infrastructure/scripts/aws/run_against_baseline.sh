@@ -17,6 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -x
+
 DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 TAG=${1}
 BRANCH=${2:-develop}

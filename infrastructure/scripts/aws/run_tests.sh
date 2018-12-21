@@ -35,7 +35,7 @@ echo "HOSTS=${HOSTS}"
 
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
   rm -rf geode-benchmarks geode && \
-  git clone --depth=1 https://github.com/smgoller/geode geode && \
+  git clone https://github.com/smgoller/geode geode && \
   (pushd geode; git checkout ${BRANCH}) && \
   (pushd geode; ./gradlew pTML -PversionNumber=${DATE} -PreleaseType="-BENCHMARKBUILD") && \
   git clone https://github.com/apache/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \

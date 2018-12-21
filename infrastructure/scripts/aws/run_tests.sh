@@ -21,8 +21,8 @@ DATE=$(date '+%m-%d-%Y-%H-%M-%S')
 
 TAG=${1}
 BRANCH=${2:-develop}
-OUTPUT=${3:-output-${DATE}-${TAG}}
-BENCHMARK_BRANCH=${4:-aws}
+BENCHMARK_BRANCH=${3:-aws}
+OUTPUT=${4:-output-${DATE}-${TAG}}
 PREFIX="geode-performance-${TAG}"
 
 SSH_OPTIONS="-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ~/.ssh/geode-benchmarks/${TAG}.pem"
@@ -35,15 +35,17 @@ echo "HOSTS=${HOSTS}"
 
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
   rm -rf geode-benchmarks geode && \
-  git clone https://github.com/smgoller/geode geode && \
+  git clone --depth=1 https://github.com/smgoller/geode geode && \
   (pushd geode; git checkout ${BRANCH}) && \
-  git clone https://github.com/smgoller/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
+  (pushd geode; ./gradlew pTML -PversionNumber=${DATE} -PreleaseType="-BENCHMARKBUILD") && \
+  git clone https://github.com/apache/geode-benchmarks --branch ${BENCHMARK_BRANCH} && \
   cd geode-benchmarks && \
-  ./gradlew --include-build ../geode benchmark -Phosts=${HOSTS}"
+  ./gradlew -PgeodeVersion=${DATE}-BENCHMARKBUILD benchmark -Phosts=${HOSTS}"
 
 
 mkdir -p ${OUTPUT}
 
 scp ${SSH_OPTIONS} -r geode@${FIRST_INSTANCE}:geode-benchmarks/geode-benchmarks/build/reports ${OUTPUT}/reports
+BENCHMARK_DIRECTORY="$(ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} ls -l geode-benchmarks/geode-benchmarks/build/ | grep benchmark | awk 'NF>1{print $NF}')"
+scp ${SSH_OPTIONS} -r geode@${FIRST_INSTANCE}:geode-benchmarks/geode-benchmarks/build/${BENCHMARK_DIRECTORY} ${OUTPUT}
 
-scp ${SSH_OPTIONS} -r geode@${FIRST_INSTANCE}:geode-benchmarks/geode-benchmarks/build/benchmarks ${OUTPUT}

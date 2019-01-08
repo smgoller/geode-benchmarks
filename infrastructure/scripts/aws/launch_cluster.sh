@@ -22,6 +22,10 @@ set -e
 TAG=${1}
 COUNT=${2}
 
+if [[ -z "${AWS_ACCESS_KEY_ID}" ]]; then
+  export AWS_PROFILE="geode-benchmarks"
+fi
+
 pushd ../../../
 ./gradlew launchCluster --args "${TAG} ${COUNT}"
 popd

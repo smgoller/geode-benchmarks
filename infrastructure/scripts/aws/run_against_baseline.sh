@@ -21,6 +21,7 @@ set -e -o pipefail
 
 BENCHMARK_BRANCH='develop'
 BRANCH='develop'
+BASELINE_VERSION='1.8.0'
 
 TEMP=`getopt t:b::v::B::V::m::o::h "$@"`
 eval set -- "$TEMP"

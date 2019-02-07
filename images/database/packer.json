@@ -1,0 +1,29 @@
+{
+  "provisioners": [
+    {
+      "type": "ansible",
+      "extra_arguments": [
+        "-e",
+        "ansible_python_interpreter=/usr/bin/python3"
+      ],
+      "playbook_file": "./ansible/playbook.yml"
+    }
+  ],
+  "builders": [
+    {
+      "type": "googlecompute",
+      "project_id": "{{user `project_id`}}",
+      "source_image_family": "ubuntu-1804-lts",
+      "zone": "us-central1-f",
+      "image_description": "created-with-packer",
+      "ssh_username": "root",
+      "image_family": "postgresql-secured",
+      "image_name": "postgresql-secured-{{timestamp}}",
+      "image_labels": {
+        "purpose": "postgresql-secured",
+        "contact": "sgoller-at-pivotal-io"
+      }
+    }
+  ]
+}
+

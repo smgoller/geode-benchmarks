@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - apt:
+        update_cache: yes
+    - apt:
+        state: present
+        update_cache: yes
+        name:
+          - apt-transport-https
+          - python3-pip
+          - postgresql
+      become: yes
+#    - pip:
+#        name:
+#          - certbot
+#          - certbot-dns-google
+#          - certbot-dns-route53
+#        state: latest
+#      become: yes
+#    - systemd:
+#        name: apparmor
+#        state: stopped
+#        enabled: no

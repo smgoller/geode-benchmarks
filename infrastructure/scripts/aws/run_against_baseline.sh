@@ -19,7 +19,9 @@
 
 set -e -o pipefail
 
+BENCHMARK_FORK='apache'
 BENCHMARK_BRANCH='develop'
+FORK='apache'
 BRANCH='develop'
 
 TEMP=`getopt t:b:v:e:B:V:m:o:h "$@"`
@@ -31,6 +33,10 @@ while true ; do
             TAG=$2 ; shift 2 ;;
         -e)
             BENCHMARK_BRANCH=$2 ; shift 2 ;;
+        -f)
+            BENCHMARK_FORK=$2 ; shift 2 ;;
+        -F)
+            BENCHMARK_FORK=$2 ; shift 2 ;;
         -m)
             METADATA=$2 ; shift 2 ;;
         -o)

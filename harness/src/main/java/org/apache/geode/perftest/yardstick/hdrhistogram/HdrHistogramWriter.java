@@ -26,7 +26,7 @@ import org.HdrHistogram.HistogramLogWriter;
 public class HdrHistogramWriter implements Consumer<Histogram> {
 
   public static final String FILE_NAME = "latency.hlog";
-  public static final String FILE_NAME_CSV = "latency.csv";
+  public static final String FILE_NAME_CSV = "latency_csv";
   public static final String FILE_NAME_HDR = "latency_hdr";
 
   private final File outputFile;

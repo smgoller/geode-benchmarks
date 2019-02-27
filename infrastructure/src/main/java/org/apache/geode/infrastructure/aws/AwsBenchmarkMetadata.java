@@ -51,6 +51,10 @@ class AwsBenchmarkMetadata extends BenchmarkMetadata {
     return BenchmarkMetadata.benchmarkKeyFileName(tag);
   }
 
+  public static String metadataFileName(String tag) {
+    return BenchmarkMetadata.benchmarkMetadataFileName(tag);
+  }
+
   public static InstanceType instanceType() {
     return INSTANCE_TYPE;
   }

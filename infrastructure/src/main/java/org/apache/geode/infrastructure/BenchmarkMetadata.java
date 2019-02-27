@@ -35,7 +35,15 @@ public class BenchmarkMetadata {
     return System.getProperty("user.home") + "/" + SSH_DIRECTORY;
   }
 
+  public static String benchmarkMetadataFileDirectory() {
+    return benchmarkKeyFileDirectory();
+  }
+
   public static String benchmarkKeyFileName(String tag) {
     return benchmarkKeyFileDirectory() + "/" + tag + ".pem";
+  }
+
+  public static String benchmarkMetadataFileName(String tag) {
+    return benchmarkMetadataFileDirectory() + "/" + tag + "-metadata.json";
   }
 }

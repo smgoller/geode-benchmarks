@@ -27,7 +27,7 @@ BENCHMARK_BRANCH=${DEFAULT_BENCHMARK_BRANCH}
 DEFAULT_REPO='https://github.com/apache/geode'
 REPO=${DEFAULT_REPO}
 DEFAULT_BRANCH='develop'
-BRANCH=${DEAULT_BRANCH}
+BRANCH=${DEFAULT_BRANCH}
 
 TAG=
 METADATA=
@@ -175,25 +175,24 @@ if [[ -z "${VERSION}" ]]; then
   ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
     cd geode && \
     ./gradlew install installDist"
-fi
 
-FULL_VERSION=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE geode/geode-assembly/build/install/apache-geode/bin/gfsh version --full)
-VERSION=$(echo "${FULL_VERSION}" | awk -F': ' '/Product-Version/ {print $2}')
-source_branch=$(echo "${FULL_VERSION}" | awk -F': ' '/Source-Repository/ {print $2}')
-source_revision=$(echo "${FULL_VERSION}" | awk -F': ' '/Source-Revision/ {print $2}')
+  VERSION=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE geode/geode-assembly/build/install/apache-geode/bin/gfsh version)
+fi
 
 if [[ -z "${VERSION}" ]]; then
   echo "Either --version or --branch is required."
   exit 1
 fi
 
+set +e
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "
   [[ ! -r .geode-benchmarks-identifier ]] && \
   uuidgen > .geode-benchmarks-identifier"
+set -e
 
 instance_id=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE cat .geode-benchmarks-identifier)
 
-METADATA="${METADATA},'source_repo':'${GEODE_REPO}','source_branch':'${source_branch}','source_revision':'${source_revision}','source_version':'${VERSION}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}'"
+METADATA="${METADATA},'source_repo':'${GEODE_REPO}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}'"
 
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE \
   rm -rf geode-benchmarks '&&' \

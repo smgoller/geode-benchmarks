@@ -19,11 +19,13 @@ package org.apache.geode.perftest.runner;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -93,6 +95,7 @@ public class DefaultTestRunner implements TestRunner {
         }
         JSONmetadata.put("testMetadata", testMetadata);
       }
+      addVersionProperties(JSONmetadata, getVersionProperties());
     }
 
     try {
@@ -134,6 +137,19 @@ public class DefaultTestRunner implements TestRunner {
       remoteJVMs.closeInfra();
     }
 
+  }
+
+  private void addVersionProperties(JSONObject jsonMetadata, Properties versionProperties) {
+    jsonMetadata.put("source_version", versionProperties.getProperty("Product-Version"));
+    jsonMetadata.put("source_branch", versionProperties.getProperty("Source-Repository"));
+    jsonMetadata.put("source_revision", versionProperties.getProperty("Source-Revision"));
+  }
+
+  private Properties getVersionProperties() throws IOException {
+    Properties versionProperties = new Properties();
+    versionProperties.load(ClassLoader
+        .getSystemResourceAsStream("/org/apache/geode/internal/GemFireVersion.properties"));
+    return versionProperties;
   }
 
   private void runTasks(List<TestConfig.TestStep> steps,

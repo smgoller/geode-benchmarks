@@ -27,6 +27,7 @@ sourceCompatibility = 1.8
 def geodeVersion = project.hasProperty('geodeVersion') ? project.findProperty('geodeVersion') : '1.+'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 

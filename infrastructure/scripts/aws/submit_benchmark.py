@@ -34,13 +34,13 @@ with open(f"{benchmark_dir}/metadata.json", "r") as read_file:
 
 
 # what we need to create a benchmark_build entry
-geode_ci_sha = ""
-geode_benchmark_sha = ""
-geode_build_version = ""
+ci_sha = ""
+benchmark_sha = ""
+build_version = ""
 instance_id = ""
 benchmarks_raw_results_uri = ""
 notes = ""
-geode_build_sha = ""
+build_sha = ""
 
 if data["instanceId"] is not None:
     instance_id = data["instanceId"]
@@ -48,7 +48,7 @@ if data["instanceId"] is not None:
 if data["testMetadata"] is not None:
     testmetadata = data["testMetadata"]
     if testmetadata["geode version"] is not None:
-        geode_build_version = testmetadata["geode version"]
+        build_version = testmetadata["geode version"]
 
 # Set up a connection to the postgres server.
 conn_string = "host="+ creds.PGHOST +" port="+ "5432" +" dbname="+ creds.PGDATABASE +" user=" + creds.PGUSER \
@@ -59,13 +59,13 @@ print("Connected!")
 # Create a cursor object
 cursor = conn.cursor()
 table_columns = [
-    "geode_ci_sha",
-    "geode_benchmark_sha",
-    "geode_build_version",
+    "ci_sha",
+    "benchmark_sha",
+    "build_version",
     "instance_id",
     "benchmarks_raw_results_uri",
     "notes",
-    "geode_build_sha"
+    "build_sha"
 ]
 
 table_values = []
@@ -74,7 +74,7 @@ for junk in table_columns:
 
 sql_command = f"INSERT INTO public.benchmark_build({','.join(table_columns)}) values ({','.join(table_values)}) returning build_id"
 
-cursor.execute(sql_command, (geode_ci_sha, geode_benchmark_sha, geode_build_version, instance_id, benchmarks_raw_results_uri, notes, geode_build_sha))
+cursor.execute(sql_command, (ci_sha, benchmark_sha, build_version, instance_id, benchmarks_raw_results_uri, notes, build_sha))
 build_id = cursor.fetchone()[0]
 conn.commit()
 

@@ -81,15 +81,6 @@ public class DefaultTestRunner implements TestRunner {
     if (metadataOutput.toFile().exists()) {
       JSONmetadata = new JSONObject(new String(Files.readAllBytes(metadataOutput)));
     } else {
-      String instanceMetadataFilename =
-          "/home/" + System.getProperty("user.home") + "/geode-benchmarks-metadata.json";
-      Path instanceMetadataFile = Paths.get(instanceMetadataFilename);
-      JSONmetadata = new JSONObject();
-      JSONObject instanceMetadata;
-      if (instanceMetadataFile.toFile().exists()) {
-        instanceMetadata = new JSONObject(new String(Files.readAllBytes(instanceMetadataFile)));
-        JSONmetadata.put("instanceId", instanceMetadata.getString("instanceId"));
-      }
       String metadata = System.getProperty("TEST_METADATA");
       if (!(metadata == null) && !metadata.isEmpty()) {
         JSONObject testMetadata = new JSONObject();

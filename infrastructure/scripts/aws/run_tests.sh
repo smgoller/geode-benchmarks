@@ -151,8 +151,8 @@ FIRST_INSTANCE=`aws ec2 describe-instances --query 'Reservations[*].Instances[*]
 echo "FIRST_INSTANCE=${FIRST_INSTANCE}"
 echo "HOSTS=${HOSTS}"
 
-if [ -z "${VERSION}" ]; then
-  if [ -z "${BRANCH}" ]; then
+if [[ -z "${VERSION}" ]]; then
+  if [[ -z "${BRANCH}" ]]; then
     echo "Specify --version or --branch."
     exit 1
   fi
@@ -175,19 +175,25 @@ if [ -z "${VERSION}" ]; then
   ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "\
     cd geode && \
     ./gradlew install installDist"
-
-
-  VERSION=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE geode/geode-assembly/build/install/apache-geode/bin/gfsh version)
 fi
 
-if [ -z "${VERSION}" ]; then
+FULL_VERSION=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE geode/geode-assembly/build/install/apache-geode/bin/gfsh version --full)
+VERSION=$(echo "${FULL_VERSION}" | awk -F': ' '/Product-Version/ {print $2}')
+source_branch=$(echo "${FULL_VERSION}" | awk -F': ' '/Source-Repository/ {print $2}')
+source_revision=$(echo "${FULL_VERSION}" | awk -F': ' '/Source-Revision/ {print $2}')
+
+if [[ -z "${VERSION}" ]]; then
   echo "Either --version or --branch is required."
   exit 1
 fi
 
-if [ -z "${METADATA}" ]; then
-  METADATA="'geode repo':'${GEODE_REPO}','geode branch':'${BRANCH}','geode version':'${VERSION}','benchmark repo':'${BENCHMARK_REPO}','benchmark branch':'${BENCHMARK_BRANCH}'"
-fi
+ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE "
+  [[ ! -r .geode-benchmarks-identifier ]] && \
+  uuidgen > .geode-benchmarks-identifier"
+
+instance_id=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE cat .geode-benchmarks-identifier)
+
+METADATA="${METADATA},'source_repo':'${GEODE_REPO}','source_branch':'${source_branch}','source_revision':'${source_revision}','source_version':'${VERSION}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}'"
 
 ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE \
   rm -rf geode-benchmarks '&&' \

@@ -147,8 +147,9 @@ public class DefaultTestRunner implements TestRunner {
 
   private Properties getVersionProperties() throws IOException {
     Properties versionProperties = new Properties();
-    versionProperties.load(ClassLoader
-        .getSystemResourceAsStream("/org/apache/geode/internal/GemFireVersion.properties"));
+
+    versionProperties.load(this.getClass().getClassLoader()
+        .getResourceAsStream("/org/apache/geode/internal/GemFireVersion.properties"));
     return versionProperties;
   }
 

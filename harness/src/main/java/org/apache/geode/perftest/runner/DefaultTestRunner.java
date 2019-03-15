@@ -20,7 +20,6 @@ package org.apache.geode.perftest.runner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.google.common.util.concurrent.UncheckedExecutionException;
 import joptsimple.internal.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -155,13 +153,14 @@ public class DefaultTestRunner implements TestRunner {
 
     ClassLoader cl = ClassLoader.getSystemClassLoader();
 
-    URL[] urls = ((URLClassLoader)cl).getURLs();
+    URL[] urls = ((URLClassLoader) cl).getURLs();
     String[] urlstrings = Arrays.stream(urls).toArray(String[]::new);
-    String urlstring = Strings.join(urlstrings,",");
+    String urlstring = Strings.join(urlstrings, ",");
     throw new IOException(urlstring);
 
     Properties versionProperties = new Properties();
-    URL resource = getClass().getClassLoader().getResource("/org/apache/geode/internal/GemFireVersion.properties");
+    URL resource = getClass().getClassLoader()
+        .getResource("/org/apache/geode/internal/GemFireVersion.properties");
     versionProperties.load(resource.openStream());
     return versionProperties;
   }

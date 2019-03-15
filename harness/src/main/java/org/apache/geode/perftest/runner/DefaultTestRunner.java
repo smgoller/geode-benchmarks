@@ -20,6 +20,7 @@ package org.apache.geode.perftest.runner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -147,9 +148,8 @@ public class DefaultTestRunner implements TestRunner {
 
   private Properties getVersionProperties() throws IOException {
     Properties versionProperties = new Properties();
-
-    versionProperties.load(this.getClass().getClassLoader()
-        .getResourceAsStream("/org/apache/geode/internal/GemFireVersion.properties"));
+    URL resource = getClass().getClassLoader().getResource("/org/apache/geode/internal/GemFireVersion.properties");
+    versionProperties.load(resource.openStream());
     return versionProperties;
   }
 

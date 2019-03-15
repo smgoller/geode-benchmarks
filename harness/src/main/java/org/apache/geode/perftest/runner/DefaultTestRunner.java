@@ -20,15 +20,19 @@ package org.apache.geode.perftest.runner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.google.common.util.concurrent.UncheckedExecutionException;
+import joptsimple.internal.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -152,12 +156,9 @@ public class DefaultTestRunner implements TestRunner {
     ClassLoader cl = ClassLoader.getSystemClassLoader();
 
     URL[] urls = ((URLClassLoader)cl).getURLs();
-
-    System.err.println("THIS IS MY CLASSPATH");
-    System.err.println("--------------------");
-    for(URL url: urls){
-      System.err.println(url.getFile());
-    }
+    String[] urlstrings = Arrays.stream(urls).toArray(String[]::new);
+    String urlstring = Strings.join(urlstrings,",");
+    throw new IOException(urlstring);
 
     Properties versionProperties = new Properties();
     URL resource = getClass().getClassLoader().getResource("/org/apache/geode/internal/GemFireVersion.properties");

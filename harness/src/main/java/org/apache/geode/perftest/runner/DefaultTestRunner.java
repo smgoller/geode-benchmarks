@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -147,6 +148,17 @@ public class DefaultTestRunner implements TestRunner {
   }
 
   private Properties getVersionProperties() throws IOException {
+
+    ClassLoader cl = ClassLoader.getSystemClassLoader();
+
+    URL[] urls = ((URLClassLoader)cl).getURLs();
+
+    System.out.println("THIS IS MY CLASSPATH");
+    System.out.println("--------------------");
+    for(URL url: urls){
+      System.out.println(url.getFile());
+    }
+
     Properties versionProperties = new Properties();
     URL resource = getClass().getClassLoader().getResource("/org/apache/geode/internal/GemFireVersion.properties");
     versionProperties.load(resource.openStream());

@@ -153,10 +153,10 @@ public class DefaultTestRunner implements TestRunner {
 
     URL[] urls = ((URLClassLoader)cl).getURLs();
 
-    System.out.println("THIS IS MY CLASSPATH");
-    System.out.println("--------------------");
+    System.err.println("THIS IS MY CLASSPATH");
+    System.err.println("--------------------");
     for(URL url: urls){
-      System.out.println(url.getFile());
+      System.err.println(url.getFile());
     }
 
     Properties versionProperties = new Properties();

@@ -42,13 +42,15 @@ benchmarks_raw_results_uri = ""
 notes = ""
 build_sha = ""
 
-if data["instanceId"] is not None:
-    instance_id = data["instanceId"]
 
 if data["testMetadata"] is not None:
     testmetadata = data["testMetadata"]
-    if testmetadata["geode version"] is not None:
-        build_version = testmetadata["geode version"]
+    if testmetadata["instanceId"] is not None:
+        instance_id = data["instanceId"]
+    if testmetadata["source_version"] is not None:
+        build_version = testmetadata["source_version"]
+    if testmetadata["source_revision"] is not None:
+        build_sha = testmetadata["source_revision"]
 
 # Set up a connection to the postgres server.
 conn_string = "host="+ creds.PGHOST +" port="+ "5432" +" dbname="+ creds.PGDATABASE +" user=" + creds.PGUSER \

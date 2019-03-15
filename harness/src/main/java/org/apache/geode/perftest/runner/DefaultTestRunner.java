@@ -154,9 +154,7 @@ public class DefaultTestRunner implements TestRunner {
     ClassLoader cl = ClassLoader.getSystemClassLoader();
 
     URL[] urls = ((URLClassLoader) cl).getURLs();
-    String[] urlstrings = Arrays.stream(urls).toArray(String[]::new);
-    String urlstring = Strings.join(urlstrings, ",");
-    throw new IOException(urlstring);
+    throw new IOException(Arrays.toString(Arrays.stream(urls).toArray(String[]::new)));
 
 //    Properties versionProperties = new Properties();
 //    URL resource = getClass().getClassLoader()

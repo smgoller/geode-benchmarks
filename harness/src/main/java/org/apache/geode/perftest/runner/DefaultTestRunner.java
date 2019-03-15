@@ -158,11 +158,11 @@ public class DefaultTestRunner implements TestRunner {
     String urlstring = Strings.join(urlstrings, ",");
     throw new IOException(urlstring);
 
-    Properties versionProperties = new Properties();
-    URL resource = getClass().getClassLoader()
-        .getResource("/org/apache/geode/internal/GemFireVersion.properties");
-    versionProperties.load(resource.openStream());
-    return versionProperties;
+//    Properties versionProperties = new Properties();
+//    URL resource = getClass().getClassLoader()
+//        .getResource("/org/apache/geode/internal/GemFireVersion.properties");
+//    versionProperties.load(resource.openStream());
+//    return versionProperties;
   }
 
   private void runTasks(List<TestConfig.TestStep> steps,

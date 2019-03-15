@@ -97,9 +97,9 @@ public class DefaultTestRunner implements TestRunner {
             testMetadata.put(kv[0], kv[1]);
           }
         }
+        addVersionProperties(testMetadata, getVersionProperties());
         JSONmetadata.put("testMetadata", testMetadata);
       }
-      addVersionProperties(JSONmetadata, getVersionProperties());
     }
 
     try {

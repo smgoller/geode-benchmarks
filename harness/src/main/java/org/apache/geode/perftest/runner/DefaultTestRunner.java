@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import joptsimple.internal.Strings;
 import org.json.JSONArray;
@@ -152,9 +153,8 @@ public class DefaultTestRunner implements TestRunner {
   private Properties getVersionProperties() throws IOException {
 
     ClassLoader cl = ClassLoader.getSystemClassLoader();
-
-    URL[] urls = ((URLClassLoader) cl).getURLs();
-    throw new IOException(Arrays.toString(Arrays.stream(urls).toArray(String[]::new)));
+    throw new IOException(Arrays.toString(
+        new Stream[]{Arrays.stream(((URLClassLoader) cl).getURLs())}));
 
 //    Properties versionProperties = new Properties();
 //    URL resource = getClass().getClassLoader()

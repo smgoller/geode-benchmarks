@@ -192,11 +192,18 @@ set -e
 
 instance_id=$(ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE cat .geode-benchmarks-identifier)
 
-METADATA="${METADATA},'source_repo':'${GEODE_REPO}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}'"
 
-ssh ${SSH_OPTIONS} geode@$FIRST_INSTANCE \
+ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} \
   rm -rf geode-benchmarks '&&' \
-  git clone ${BENCHMARK_REPO} --branch ${BENCHMARK_BRANCH} '&&' \
+  git clone ${BENCHMARK_REPO} --branch ${BENCHMARK_BRANCH}
+
+BENCHMARK_SHA=$(ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} \
+  cd geode-benchmarks '&&' \
+  git rev-parse --verify -q HEAD)
+
+METADATA="${METADATA},'source_repo':'${GEODE_REPO}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}','benchmark_sha':'${BENCHMARK_SHA}'"
+
+ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} \
   cd geode-benchmarks '&&' \
   ./gradlew -PgeodeVersion=${VERSION} benchmark -Phosts=${HOSTS} -Pmetadata="${METADATA}" "$@"
 

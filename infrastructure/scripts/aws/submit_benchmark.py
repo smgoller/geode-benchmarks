@@ -45,8 +45,8 @@ build_sha = ""
 
 if data["testMetadata"] is not None:
     testmetadata = data["testMetadata"]
-    if testmetadata["instanceId"] is not None:
-        instance_id = data["instanceId"]
+    if testmetadata["instance_id"] is not None:
+        instance_id = testmetadata["instance_id"]
     if testmetadata["source_version"] is not None:
         build_version = testmetadata["source_version"]
     if testmetadata["source_revision"] is not None:

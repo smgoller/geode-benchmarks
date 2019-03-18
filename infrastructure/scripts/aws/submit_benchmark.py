@@ -67,7 +67,7 @@ cursor = conn.cursor()
 
 # figure out if we've already submitted the data
 identifier_command = f"select build_id from public.benchmark_build where build_identifier = %s"
-cursor.execute(identifier_command, build_identifier)
+cursor.execute(identifier_command, (build_identifier,))
 rows = cursor.fetchall()
 
 if len(rows) > 0:
@@ -82,7 +82,8 @@ table_columns = [
     "instance_id",
     "benchmarks_raw_results_uri",
     "notes",
-    "build_sha"
+    "build_sha",
+    "build_identifier"
 ]
 
 table_values = []
@@ -91,7 +92,7 @@ for junk in table_columns:
 
 sql_command = f"INSERT INTO public.benchmark_build({','.join(table_columns)}) values ({','.join(table_values)}) returning build_id"
 
-cursor.execute(sql_command, (ci_sha, benchmark_sha, build_version, instance_id, benchmarks_raw_results_uri, notes, build_sha))
+cursor.execute(sql_command, (ci_sha, benchmark_sha, build_version, instance_id, benchmarks_raw_results_uri, notes, build_sha, build_identifier))
 build_id = cursor.fetchone()[0]
 conn.commit()
 

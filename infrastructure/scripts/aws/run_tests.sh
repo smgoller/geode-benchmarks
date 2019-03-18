@@ -201,7 +201,9 @@ BENCHMARK_SHA=$(ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} \
   cd geode-benchmarks '&&' \
   git rev-parse --verify -q HEAD)
 
-METADATA="${METADATA},'source_repo':'${GEODE_REPO}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}','benchmark_sha':'${BENCHMARK_SHA}'"
+BUILD_IDENTIFIER="$(uuidgen)"
+
+METADATA="${METADATA},'source_repo':'${GEODE_REPO}','benchmark_repo':'${BENCHMARK_REPO}','benchmark_branch':'${BENCHMARK_BRANCH}','instance_id':'${instance_id}','benchmark_sha':'${BENCHMARK_SHA}','build_identifier':'${BUILD_IDENTIFIER}'"
 
 ssh ${SSH_OPTIONS} geode@${FIRST_INSTANCE} \
   cd geode-benchmarks '&&' \

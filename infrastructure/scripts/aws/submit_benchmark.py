@@ -41,7 +41,7 @@ instance_id = ""
 benchmarks_raw_results_uri = ""
 notes = ""
 build_sha = ""
-
+build_identifier = ""
 
 if data["testMetadata"] is not None:
     testmetadata = data["testMetadata"]
@@ -51,6 +51,10 @@ if data["testMetadata"] is not None:
         build_version = testmetadata["source_version"]
     if testmetadata["source_revision"] is not None:
         build_sha = testmetadata["source_revision"]
+    if testmetadata["benchmark_sha"] is not None:
+        benchmark_sha = testmetadata["benchmark_sha"]
+    if testmetadata["build_identifier"] is not None:
+        build_identifier = testmetadata["build_identifier"]
 
 # Set up a connection to the postgres server.
 conn_string = "host="+ creds.PGHOST +" port="+ "5432" +" dbname="+ creds.PGDATABASE +" user=" + creds.PGUSER \
@@ -60,6 +64,17 @@ print("Connected!")
 
 # Create a cursor object
 cursor = conn.cursor()
+
+# figure out if we've already submitted the data
+identifier_command = f"select build_id from public.benchmark_build where build_identifier = %s"
+cursor.execute(identifier_command, build_identifier)
+rows = cursor.fetchall()
+
+if len(rows) > 0:
+    print("This build data has already been submitted to the database.")
+    exit(1)
+
+
 table_columns = [
     "ci_sha",
     "benchmark_sha",

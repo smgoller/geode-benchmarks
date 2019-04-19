@@ -113,6 +113,15 @@ public class DefaultTestRunner implements TestRunner {
     metadataWriter.write(JSONmetadata.toString());
     metadataWriter.flush();
 
+    Integer threadCount = 0;
+    String threadCountString = System.getProperty("TEST_THREADS");
+    if (!(threadCountString == null) && !threadCountString.isEmpty()) {
+      threadCount = Integer.parseUnsignedInt(threadCountString);
+    }
+    if (threadCount > 0) {
+      config.threads(threadCount);
+    }
+
     Map<String, Integer> roles = config.getRoles();
     Map<String, List<String>> jvmArgs = config.getJvmArgs();
 

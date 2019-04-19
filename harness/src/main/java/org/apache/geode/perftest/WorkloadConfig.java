@@ -30,9 +30,10 @@ import org.apache.geode.perftest.yardstick.YardstickTask;
  * {@link TestConfig#workload(BenchmarkDriver, String...)} method.
  */
 public class WorkloadConfig implements Serializable {
-  long durationSeconds = 1;
-  long warmupSeconds = 0;
-  int threads = Runtime.getRuntime().availableProcessors() * 16;
+  private long durationSeconds = 1;
+  private long warmupSeconds = 0;
+  private int threads = Runtime.getRuntime().availableProcessors() * 16;
+  private int maxThreads = 0;
 
   public WorkloadConfig() {}
 
@@ -57,6 +58,14 @@ public class WorkloadConfig implements Serializable {
   }
 
   public int getThreads() {
-    return threads;
+    if ((maxThreads > 0) && (threads > maxThreads)) {
+      return maxThreads;
+    } else {
+      return threads;
+    }
   }
+
+  public void maxThreads(int maxThreads) { this.maxThreads = maxThreads; }
+
+  public int getMaxThreads() { return this.maxThreads; }
 }

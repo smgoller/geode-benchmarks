@@ -115,6 +115,8 @@ public class TestConfig implements Serializable {
     workloadConfig.warmupSeconds(warmupSeconds);
   }
 
+  public void maxThreads(int maxThreads) { workloadConfig.maxThreads(maxThreads); }
+
   public long getDurationSeconds() {
     return workloadConfig.getDurationSeconds();
   }
@@ -122,6 +124,8 @@ public class TestConfig implements Serializable {
   public long getWarmupSeconds() {
     return workloadConfig.getWarmupSeconds();
   }
+
+  public long getMaxThreads() { return workloadConfig.getMaxThreads(); }
 
   public Map<String, Integer> getRoles() {
     return roles;

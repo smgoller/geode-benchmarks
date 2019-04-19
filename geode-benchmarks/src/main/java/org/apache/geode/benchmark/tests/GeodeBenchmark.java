@@ -26,11 +26,17 @@ public class GeodeBenchmark {
    * Total duration for which the benchmark will run on the default runner
    */
   public static final int BENCHMARK_DURATION = 240;
+  /**
+   * Maximum number of threads on the default runner (0 == no limit)
+   *
+   */
+  public static final int MAX_THREADS = 0;
 
   public static TestConfig createConfig() {
     TestConfig testConfig = new TestConfig();
     testConfig.warmupSeconds(WARM_UP_TIME);
     testConfig.durationSeconds(BENCHMARK_DURATION);
+    testConfig.maxThreads(MAX_THREADS);
     return testConfig;
   }
 
